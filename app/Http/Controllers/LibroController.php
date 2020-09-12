@@ -41,7 +41,7 @@ class LibroController extends Controller
        $libro->nombre = $nombre;
        $libro->edicion = $edicion;
        $libro->save();
-       return '{"msg":"creado"}'; // return redirect('/libro');
+       return '{"msg":"creado", "result":'.$libro.'}'; // return redirect('/libro');
     }
 
     /**
@@ -52,7 +52,8 @@ class LibroController extends Controller
      */
     public function show($id)
     {
-        //
+        $libro = Libro::where('id', $id)->first();
+        return $libro;
     }
 
     /**
@@ -63,7 +64,8 @@ class LibroController extends Controller
      */
     public function edit($id)
     {
-        //
+      $libro = Libro::where('id', $id)->first();
+      return $libro;
     }
 
     /**
@@ -73,9 +75,14 @@ class LibroController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+       $nombre = $request->input('nombre');
+       $edicion = $request->input('edicion');
+       $id = $request->input('id');
+       Libro::where('id', $id)
+             ->update([ 'nombre'=>$nombre, "edicion"=>$edicion ]);
+       return '{"msg":"actualizado"}';
     }
 
     /**
@@ -87,7 +94,7 @@ class LibroController extends Controller
     public function destroy($id)
     {
          $res =  Libro::destroy($id);
-         return '{"res":"'.$res.'","msg":"eliminado" }'; 
+         return '{"id":"'.$id.'","msg":"eliminado" }'; 
       // return  redirect('/libro');
     }
 }
